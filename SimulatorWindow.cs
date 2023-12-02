@@ -18,20 +18,20 @@ namespace Simulator.Plugin
             switch (comboBoxDisplay.Text)
             {
                 case "SweatBox-1":
-                    SimulatorPlugin.Server = "https://sweatbox01-training.vatpac.org";
+                    SimulatorPlugin._server = "https://sweatbox01-training.vatpac.org";
                     break;
                 case "SweatBox-2":
-                    SimulatorPlugin.Server = "https://sweatbox02-training.vatpac.org";
+                    SimulatorPlugin._server = "https://sweatbox02-training.vatpac.org";
                     break;
                 default:
-                    SimulatorPlugin.Server = string.Empty;
+                    SimulatorPlugin._server = string.Empty;
                     break;
             }
         }
 
         private void SimulatorWindow_Load(object sender, EventArgs e)
         {
-            switch (SimulatorPlugin.Server)
+            switch (SimulatorPlugin._server)
             {
                 case "https://sweatbox01-training.vatpac.org":
                     comboBoxDisplay.Text = "SweatBox-1";
