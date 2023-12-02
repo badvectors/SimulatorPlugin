@@ -41,8 +41,9 @@
             this.comboBoxDisplay.FormattingEnabled = true;
             this.comboBoxDisplay.Items.AddRange(new object[] {
             "",
-            "SweatBox-1",
-            "SweatBox-2"});
+            "Vatpac SweatBox-1",
+            "Vatpac SweatBox-2",
+            "Vatmex SweatBox"});
             this.comboBoxDisplay.Location = new System.Drawing.Point(16, 31);
             this.comboBoxDisplay.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxDisplay.Name = "comboBoxDisplay";

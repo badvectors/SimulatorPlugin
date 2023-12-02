@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace Simulator.Plugin
         public static HttpClient _httpClient = new HttpClient();
         public static string _server = string.Empty;
         public static bool _send = false;
+
+        public static Dictionary<string, string> Servers { get; set; }
 
         private static CustomToolStripMenuItem _simulatorMenu;
         private static SimulatorWindow _simulatorWindow;

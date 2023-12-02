@@ -17,11 +17,14 @@ namespace Simulator.Plugin
         {
             switch (comboBoxDisplay.Text)
             {
-                case "SweatBox-1":
+                case "Vatpac SweatBox-1":
                     SimulatorPlugin._server = "https://sweatbox01-training.vatpac.org";
                     break;
-                case "SweatBox-2":
+                case "Vatpac SweatBox-2":
                     SimulatorPlugin._server = "https://sweatbox02-training.vatpac.org";
+                    break;
+                case "Vatmex SweatBox":
+                    SimulatorPlugin._server = "https://sweatbox.vatmex.com.mx";
                     break;
                 default:
                     SimulatorPlugin._server = string.Empty;
@@ -34,10 +37,13 @@ namespace Simulator.Plugin
             switch (SimulatorPlugin._server)
             {
                 case "https://sweatbox01-training.vatpac.org":
-                    comboBoxDisplay.Text = "SweatBox-1";
+                    comboBoxDisplay.Text = "Vatpac SweatBox-1";
                     return;
                 case "https://sweatbox02-training.vatpac.org":
-                    comboBoxDisplay.Text = "SweatBox-2";
+                    comboBoxDisplay.Text = "Vatpac SweatBox-2";
+                    return;
+                case "https://sweatbox.vatmex.com.mx":
+                    comboBoxDisplay.Text = "Vatmex SweatBox";
                     return;
                 default:
                     comboBoxDisplay.Text = "";
