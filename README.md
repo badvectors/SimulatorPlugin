@@ -13,4 +13,4 @@ A plugin that selects the aircraft in the simulator for [vatSys](https://virtual
 
 Select the simualator server in Settings > Simulator.
 
-Click on a target in vatSys, and teh simulator will open that aircraft.
+You can click on the flight data strip for any aircraft and also the target on the radar if the target is activated.
