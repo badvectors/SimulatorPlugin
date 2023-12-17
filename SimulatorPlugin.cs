@@ -15,8 +15,8 @@ namespace Simulator.Plugin
     {
         public string Name => "Simulator";
 
-        private static readonly Version _version = new Version(1, 1);
-        private static readonly string _versionUrl = "https://raw.githubusercontent.com/badvectors/DiscordPlugin/master/Version.json";
+        private static readonly Version _version = new Version(1, 2);
+        private static readonly string _versionUrl = "https://raw.githubusercontent.com/badvectors/SimulatorPlugin/master/Version.json";
         public static HttpClient _httpClient = new HttpClient();
         public static string _server = string.Empty;
         public static bool _send = false;
