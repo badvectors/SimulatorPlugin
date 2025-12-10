@@ -4,7 +4,7 @@ A plugin that selects the aircraft in the simulator for [vatSys](https://virtual
 
 #### Installation
 
-Install using the [vatSys Launcher](hhttps://github.com/badvectors/vatSysLauncher).
+Install using the [vatSys Launcher](https://github.com/badvectors/vatSysLauncher).
 
 #### How to use
 
