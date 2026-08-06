@@ -23,6 +23,14 @@ namespace Simulator.Plugin
 
         public static List<Server> Servers { get; } = LoadServers();
 
+        /// <summary>
+        /// What the last poll found, for the Simulator window to show. Every one of these except Paused
+        /// and Running is a reason nothing will freeze, and the point of surfacing it is that they are
+        /// otherwise indistinguishable from a broken plugin - NoServer especially, which is the default
+        /// state and silent.
+        /// </summary>
+        public static SessionStatus Status { get; private set; } = SessionStatus.NoServer;
+
         private static CustomToolStripMenuItem _simulatorMenu;
         private static SimulatorWindow _simulatorWindow;
 
@@ -76,28 +84,61 @@ namespace Simulator.Plugin
         /// </summary>
         private static async Task<bool> IsSessionPaused()
         {
-            if (string.IsNullOrWhiteSpace(_server)) return false;
+            if (string.IsNullOrWhiteSpace(_server))
+            {
+                Status = SessionStatus.NoServer;
+                return false;
+            }
 
-            if (Network.IsOfficialServer) return false;
+            if (Network.IsOfficialServer)
+            {
+                Status = SessionStatus.OfficialNetwork;
+                return false;
+            }
 
             var cid = Network.ControllerId;
 
-            if (string.IsNullOrWhiteSpace(cid)) return false;
+            if (string.IsNullOrWhiteSpace(cid))
+            {
+                Status = SessionStatus.NotConnected;
+                return false;
+            }
 
             try
             {
                 var response = await _httpClient.GetAsync($"{_server}/session?cid={Uri.EscapeDataString(cid)}");
 
-                if (!response.IsSuccessStatusCode) return false;
+                if (!response.IsSuccessStatusCode)
+                {
+                    Status = response.StatusCode == System.Net.HttpStatusCode.NotFound
+                        ? SessionStatus.NoSession
+                        : SessionStatus.Unreachable;
+                    return false;
+                }
 
                 var state = JsonConvert.DeserializeObject<SessionState>(await response.Content.ReadAsStringAsync());
 
+                if (state == null)
+                {
+                    Status = SessionStatus.Unreachable;
+                    return false;
+                }
+
                 // A session with no scenario loaded isn't paused, it just hasn't started - freezing there
                 // would hold the display still before there was ever anything on it.
-                return state != null && state.ScenarioLoaded && !state.Running;
+                if (!state.ScenarioLoaded)
+                {
+                    Status = SessionStatus.NoScenario;
+                    return false;
+                }
+
+                Status = state.Running ? SessionStatus.Running : SessionStatus.Paused;
+
+                return !state.Running;
             }
             catch
             {
+                Status = SessionStatus.Unreachable;
                 return false;
             }
         }

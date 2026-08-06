@@ -31,6 +31,7 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.comboBoxDisplay = new System.Windows.Forms.ComboBox();
             this.labelDisplay = new System.Windows.Forms.Label();
+            this.labelStatus = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // comboBoxDisplay
@@ -56,22 +57,32 @@
             this.labelDisplay.Size = new System.Drawing.Size(56, 17);
             this.labelDisplay.TabIndex = 2;
             this.labelDisplay.Text = "Server";
-            // 
+            //
+            // labelStatus
+            //
+            this.labelStatus.Font = new System.Drawing.Font("Terminus (TTF)", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.labelStatus.Location = new System.Drawing.Point(16, 66);
+            this.labelStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(255, 54);
+            this.labelStatus.TabIndex = 3;
+            //
             // SimulatorWindow
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(284, 72);
+            this.ClientSize = new System.Drawing.Size(284, 126);
+            this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.labelDisplay);
             this.Controls.Add(this.comboBoxDisplay);
             this.ForeColor = System.Drawing.SystemColors.InfoText;
             this.HasMinimizeButton = false;
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximumSize = new System.Drawing.Size(288, 100);
+            this.MaximumSize = new System.Drawing.Size(288, 154);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(288, 100);
+            this.MinimumSize = new System.Drawing.Size(288, 154);
             this.Name = "SimulatorWindow";
             this.Resizeable = false;
             this.Text = "Simulator";
@@ -86,5 +97,6 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ComboBox comboBoxDisplay;
         private System.Windows.Forms.Label labelDisplay;
+        private System.Windows.Forms.Label labelStatus;
     }
 }
