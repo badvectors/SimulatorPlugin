@@ -39,11 +39,6 @@
             this.comboBoxDisplay.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDisplay.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.comboBoxDisplay.FormattingEnabled = true;
-            this.comboBoxDisplay.Items.AddRange(new object[] {
-            "",
-            "Vatpac SweatBox-1",
-            "Vatpac SweatBox-2",
-            "Vatmex SweatBox"});
             this.comboBoxDisplay.Location = new System.Drawing.Point(16, 31);
             this.comboBoxDisplay.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxDisplay.Name = "comboBoxDisplay";

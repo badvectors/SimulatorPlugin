@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Linq;
 using vatsys;
 
 namespace Simulator.Plugin
@@ -15,40 +16,26 @@ namespace Simulator.Plugin
 
         private void ComboBoxDisplay_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (comboBoxDisplay.Text)
-            {
-                case "Vatpac SweatBox-1":
-                    SimulatorPlugin._server = "https://sweatbox01-training.vatpac.org";
-                    break;
-                case "Vatpac SweatBox-2":
-                    SimulatorPlugin._server = "https://sweatbox02-training.vatpac.org";
-                    break;
-                case "Vatmex SweatBox":
-                    SimulatorPlugin._server = "https://sweatbox.vatmex.com.mx";
-                    break;
-                default:
-                    SimulatorPlugin._server = string.Empty;
-                    break;
-            }
+            var server = SimulatorPlugin.Servers.FirstOrDefault(x => x.Name == comboBoxDisplay.Text);
+
+            SimulatorPlugin._server = server == null ? string.Empty : server.Url;
         }
 
         private void SimulatorWindow_Load(object sender, EventArgs e)
         {
-            switch (SimulatorPlugin._server)
+            comboBoxDisplay.Items.Clear();
+
+            // The blank first entry is "no server" - selecting it stops anything being sent.
+            comboBoxDisplay.Items.Add(string.Empty);
+
+            foreach (var server in SimulatorPlugin.Servers)
             {
-                case "https://sweatbox01-training.vatpac.org":
-                    comboBoxDisplay.Text = "Vatpac SweatBox-1";
-                    return;
-                case "https://sweatbox02-training.vatpac.org":
-                    comboBoxDisplay.Text = "Vatpac SweatBox-2";
-                    return;
-                case "https://sweatbox.vatmex.com.mx":
-                    comboBoxDisplay.Text = "Vatmex SweatBox";
-                    return;
-                default:
-                    comboBoxDisplay.Text = "";
-                    return;
+                comboBoxDisplay.Items.Add(server.Name);
             }
+
+            var selected = SimulatorPlugin.Servers.FirstOrDefault(x => x.Url == SimulatorPlugin._server);
+
+            comboBoxDisplay.Text = selected == null ? string.Empty : selected.Name;
         }
     }
 }
