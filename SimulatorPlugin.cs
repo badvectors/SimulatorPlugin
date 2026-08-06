@@ -26,6 +26,15 @@ namespace Simulator.Plugin
         private static CustomToolStripMenuItem _simulatorMenu;
         private static SimulatorWindow _simulatorWindow;
 
+        /// <summary>
+        /// How often the selected server is asked whether its session is paused. One second: this is what
+        /// decides how quickly the display settles after the instructor hits pause, and the answer is two
+        /// booleans read out of memory. AutoReset is off and the timer is restarted after each poll
+        /// finishes, so a slow or hanging server can't stack requests up.
+        /// </summary>
+        private static readonly System.Timers.Timer _sessionTimer =
+            new System.Timers.Timer(TimeSpan.FromSeconds(1).TotalMilliseconds) { AutoReset = false };
+
         public SimulatorPlugin()
         {
             MMI.SelectedTrackChanged += MMI_SelectedTrackChanged;
@@ -35,6 +44,62 @@ namespace Simulator.Plugin
             _simulatorMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Settings, new ToolStripMenuItem("Simulator"));
             _simulatorMenu.Item.Click += SimulatorMenu_Click;
             MMI.AddCustomMenuItem(_simulatorMenu);
+
+            _sessionTimer.Elapsed += SessionTimer_Elapsed;
+            _sessionTimer.Start();
+        }
+
+        private static async void SessionTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                RadarFreeze.Apply(await IsSessionPaused());
+            }
+            catch
+            {
+                // Belt and braces - Apply and IsSessionPaused both swallow their own failures, but an
+                // unhandled exception on this thread would take vatSys down with it, and a plugin must
+                // never do that. Anything unexpected releases the freeze.
+                try { RadarFreeze.Apply(false); } catch { }
+            }
+            finally
+            {
+                _sessionTimer.Start();
+            }
+        }
+
+        /// <summary>
+        /// Whether the simulator session this vatSys is connected to is loaded but paused. False for every
+        /// other case, including all the failure ones: no server selected, the real network, no session for
+        /// this CID, an unreachable server, an answer that doesn't parse. RadarFreeze only holds the
+        /// display while this keeps saying true, so every one of those releases it.
+        /// </summary>
+        private static async Task<bool> IsSessionPaused()
+        {
+            if (string.IsNullOrWhiteSpace(_server)) return false;
+
+            if (Network.IsOfficialServer) return false;
+
+            var cid = Network.ControllerId;
+
+            if (string.IsNullOrWhiteSpace(cid)) return false;
+
+            try
+            {
+                var response = await _httpClient.GetAsync($"{_server}/session?cid={Uri.EscapeDataString(cid)}");
+
+                if (!response.IsSuccessStatusCode) return false;
+
+                var state = JsonConvert.DeserializeObject<SessionState>(await response.Content.ReadAsStringAsync());
+
+                // A session with no scenario loaded isn't paused, it just hasn't started - freezing there
+                // would hold the display still before there was ever anything on it.
+                return state != null && state.ScenarioLoaded && !state.Running;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
